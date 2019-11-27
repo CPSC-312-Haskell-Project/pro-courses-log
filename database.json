@@ -1,0 +1,30 @@
+{
+	"videos": [
+		{
+			"name": "",
+			"link": "",
+			"level": "",
+			"subject": "",
+			"topic": ""
+		},
+		{
+			"name": "",
+			"link": "",
+			"level": "",
+			"subject": "",
+			"topic": ""
+		}
+	],
+	"courses": [
+		{
+			"coursename": "Functional and Logic Programming",
+			"courseid": "CPSC312",
+			"topic": "functionalprogramming"
+		},
+		{
+			"coursename": "Intro Linear Algebra",
+			"courseid": "MATH221",
+			"topic": "linearalgebra"
+		}
+	]
+}
