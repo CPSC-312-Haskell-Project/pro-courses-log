@@ -1,28 +1,30 @@
 {
 	"videos": [
 		{
-			"name": "",
-			"link": "",
-			"level": "",
-			"subject": "",
-			"topic": ""
+			"name": "Introduction_to_matrices",
+			"creator": "Khan_Academy",
+			"link": "https://youtu.be/xyAuNHPsq-g",
+			"level": "1",
+			"subject": "math",
+			"topic": "linearalgebra"
 		},
 		{
-			"name": "",
-			"link": "",
-			"level": "",
-			"subject": "",
-			"topic": ""
+			"name": "Functional_Programming_Haskell",
+			"creator": "Computerphile",
+			"link": "https://youtu.be/LnX3B9oaKzw",
+			"level": "3",
+			"subject": "cs",
+			"topic": "functionalprogramming"
 		}
 	],
 	"courses": [
 		{
-			"coursename": "Functional and Logic Programming",
+			"coursename": "Functional_and_Logic_Programming",
 			"courseid": "CPSC312",
 			"topic": "functionalprogramming"
 		},
 		{
-			"coursename": "Intro Linear Algebra",
+			"coursename": "Intro_Linear_Algebra",
 			"courseid": "MATH221",
 			"topic": "linearalgebra"
 		}
