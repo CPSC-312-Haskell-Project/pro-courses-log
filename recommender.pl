@@ -47,10 +47,12 @@ parse_courses([H|T],H) :-
 	% Get values from Dict
 	atom_string(Coursename,H.coursename),
 	term_to_atom(Courseid,H.courseid),
+	term_to_atom(Minlevel,H.minlevel),
 	term_to_atom(Topic,H.topic),
 	% Build KB
 	assert(course(Courseid)),
 	assert(course_name(Courseid, Coursename)),
+	assert(course_minlevel(Courseid, Minlevel)),
 	assert(course_topic(Courseid, Topic)),
 	parse_courses(T,_).
 
