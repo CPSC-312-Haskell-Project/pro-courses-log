@@ -59,4 +59,13 @@ parse_courses([H|T],H) :-
 :- initialization(load_db(_)).
 
 % What to try:
-% video("Introduction to matrices", C, L, S, T)
+% ?- course_topic(cpsc312,A).
+% A = functionalprogramming.
+
+% ?- video_name(1,X).
+% X = 'Introduction to matrices'.
+
+% ?- video_topic(I,linearalgebra), video_link(I,L), video_name(I,N).
+% I = 1,
+% L = 'https://youtu.be/xyAuNHPsq-g',
+% N = 'Introduction to matrices'.
