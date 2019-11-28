@@ -4,38 +4,59 @@
 :- dynamic(found/2).
 
 % load the database
-kdb(Dict, Videos, Courses) :-
+load_db(Dict) :- 
 	setup_call_cleanup(
 		http_open('https://raw.githubusercontent.com/CPSC-312-Haskell-Project/pro-courses-log/master/database.json', In, []),
 		json_read_dict(In, Dict),
 		close(In)
-	),
-	get_videos(Dict, Videos),
-	parse_videos(Videos),
-	get_courses(Dict, Courses),
-	parse_courses(Courses).
+	), 
+	kdb(Dict,_,_).
 	
+% Our knowledge databases are of two types: videos and courses
+kdb(Dict, Videos, Video) :-
+	get_videos(Dict, Videos),
+	parse_videos(Videos, Video).
+kdb(Dict, Courses, Course) :-
+	get_courses(Dict, Courses),
+	parse_courses(Courses, Course).
+
 % Retrieve videos and its contents from the dictionary
 get_videos(X, X.videos).
-parse_videos([H|T]) :-
+parse_videos([H|T],H) :-
 	% Get values from Dict
+	term_to_atom(Id,H.id),
+	atom_string(Name,H.name),
+	atom_string(Creator,H.creator),
+	atom_string(Link,H.link),
 	term_to_atom(Level,H.level),
 	term_to_atom(Subject,H.subject),
 	term_to_atom(Topic,H.topic),
 	% Build KB
-	assert(video(H.name, H.creator, H.link, Level, Subject, Topic)),
-	parse_videos(T).
+	assert(video(Id)),
+	assert(video_name(Id, Name)),
+	assert(video_creator(Id, Creator)),
+	assert(video_link(Id, Link)),
+	assert(video_level(Id, Level)),
+	assert(video_subject(Id, Subject)),
+	assert(video_topic(Id, Topic)),
+	parse_videos(T,_).
 
 % Retrieve courses and its information from the dictionary
 get_courses(X, X.courses).
-parse_courses([H|T]) :-
+parse_courses([H|T],H) :-
 	% Get values from Dict
+	atom_string(Coursename,H.coursename),
 	term_to_atom(Courseid,H.courseid),
 	term_to_atom(Topic,H.topic),
 	% Build KB
-	assert(course(H.coursename, Courseid, Topic)),
-	parse_courses(T).
+	assert(course(Courseid)),
+	assert(course_name(Courseid, Coursename)),
+	assert(course_topic(Courseid, Topic)),
+	parse_courses(T,_).
 
 % Build the knowledge base first whenever the project is made before allowing
 % users to make queries
-:- initialization(kdb(_,_,_)).
+:- initialization(load_db(_)).
+
+% What to try:
+% video("Introduction to matrices", C, L, S, T)
