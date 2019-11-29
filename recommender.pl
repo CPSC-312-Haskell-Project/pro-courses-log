@@ -172,6 +172,9 @@ ask(Q,A) :-
 		question(Q,[],A,[],C),
 		prove_all(C).
 
+% Gives video name A and link L to question Q
+ask_vid(Q,A,L) :- ask(Q,A), getLink(L,A).
+
 % Proves all elements of L against the database
 prove_all([]).
 prove_all([H|T]) :-
@@ -256,8 +259,11 @@ getLink(X,Y) :-
 relatedVideoToCourse(X,Y) :-
 	video_name(IdX, X),
 	video_topic(IdX, Topic),
+	video_level(IdX, Level),
     course_topic(IdY, Topic),
-    course_name(IdY, Y).
+    course_name(IdY, Y),
+	course_minlevel(IdY, MinLevel),
+	MinLevel =< Level.
 
 relatedCourseToVideo(X,Y) :-
 	course_name(IdX, X),
@@ -278,17 +284,20 @@ getCourseMinLevel(X,Y) :-
    %setof((X,Y), B^(video_link(Id, X), video_name(Id, Y), \+X=Y), Set), member((X,Y), Set).
    %setof((X,Y), linkHelp(X,Y), Set), member((X,Y), Set).
 
-	% try:
-    % ?- ask([show,videos,with,similar,topic,to,'Logic for Programmers: Propositional Logic'],A).
-    % A = '[Logic] Predicate Logic' ;
-    % A = 'Lecture 23 | Logic 3: Bottom-up and Top-down Proof Procedures' ;
+% try:
+% ?- ask([show,videos,with,similar,topic,to,'Logic for Programmers: Propositional Logic'],A).
+% A = '[Logic] Predicate Logic' ;
+% A = 'Lecture 23 | Logic 3: Bottom-up and Top-down Proof Procedures' ;
 
-    % ?- ask([show,video,with,same,subject,as,'Logic for Programmers: Propositional Logic'],A).
-    % ?- ask([show,videos,with,same,creator,as,'UML Class Diagram Tutorial'],A).
-    % ?- ask([show,next,video,from,'[Logic] Predicate Logic'],A).
-    % ?- ask([show,previous,video,from,'[Logic] Predicate Logic'],A).
-    % ?- ask([show,level,of,'Logic for Programmers: Propositional Logic'],A).
-    
-    % ?- ask([show,level,requirement,for,'Models of Computation'],A).
-    % ?- ask([show,course,related,to,video,'Logic for Programmers: Propositional Logic'],A).
-    % ?- ask([show,videos,related,to,course,'Models of Computation'],A).
+% ?- ask([show,video,with,same,subject,as,'Logic for Programmers: Propositional Logic'],A).
+% ?- ask([show,videos,with,same,creator,as,'UML Class Diagram Tutorial'],A).
+% ?- ask([show,next,video,from,'[Logic] Predicate Logic'],A).
+% ?- ask([show,previous,video,from,'[Logic] Predicate Logic'],A).
+% ?- ask([show,level,of,'Logic for Programmers: Propositional Logic'],A).
+% ?- ask([show,level,requirement,for,'Models of Computation'],A).
+% ?- ask([show,course,related,to,video,'Logic for Programmers: Propositional Logic'],A).
+% ?- ask([show,videos,related,to,course,'Models of Computation'],A).
+
+% To get link as well as video title, try:
+% ?- ask_vid([show,next,video,from,'[Logic] Predicate Logic'],A,L).
+% ?- ask_vid([show,videos,related,to,course,'Introduction to Software Engineering'],A,L).
