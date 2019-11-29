@@ -71,3 +71,79 @@ parse_courses([H|T],H) :-
 % I = 1,
 % L = 'https://youtu.be/xyAuNHPsq-g',
 % N = 'Introduction to matrices'.
+
+noun_phrase(L0,L4,Entity,C0,C4) :-
+	det(L0,L1,Entity,C0,C1),
+	adj(L1,L2,Entity,C1,C2),
+	noun(L2,L3,Entity,C2,C3),
+	mp(L3,L4,Entity,C3,C4).
+
+% Determiners.
+det([the | L],L,_,C,C).
+det([a | L],L,_,C,C).
+det(L,L,_,C,C).
+
+% Adjectives.
+adj(L,L,_,C,C).
+
+% Modifying phrases
+mp(L,L,_,C,C).
+mp(L0,L2,Subject,C0,C2) :-
+	reln(L0,L1,Subject,Object,C0,C1),
+	noun_phrase(L1,L2,Object,C1,C2).
+mp([that|L0],L2,Subject,C0,C2) :-
+	reln(L0,L1,Subject,Object,C0,C1),
+	noun_phrase(L1,L2,Object,C1,C2).
+mp([that,is|L0],L2,Subject,C0,C2) :-
+	reln(L0,L1,Subject,Object,C0,C1),
+	noun_phrase(L1,L2,Object,C1,C2).
+mp([with|L0],L2,Subject,C0,C2) :-
+	reln(L0,L1,Subject,Object,C0,C1),
+	noun_phrase(L1,L2,Object,C1,C2).
+mp([with, the|L0],L2,Subject,C0,C2) :-
+	reln(L0,L1,Subject,Object,C0,C1),
+	noun_phrase(L1,L2,Object,C1,C2).
+
+% Noun
+noun([video | L],L,Entity,C,[isVideo(Entity)|C]).
+noun([X | L],L,X,C,C) :- isVideo(X).
+
+% Relations.
+reln([similar, to| L],L,O1,O2,_,[sameTopic(O1,O2)]).
+reln([similar, topic, as| L],L,O1,O2,_,[sameTopic(O1,O2)]).
+reln([same, topic | L],L,O1,O2,_,[sameTopic(O1,O2)]).
+
+% Questions.
+question([is | L0],L2,Entity,C0,C2) :-
+		noun_phrase(L0,L1,Entity,C0,C1),
+		mp(L1,L2,Entity,C1,C2).
+question([what,is | L0],L1,Entity,C0,C1) :-
+		mp(L0,L1,Entity,C0,C1).
+question([what,is | L0],L1,Entity,C0,C1) :-
+		noun_phrase(L0,L1,Entity,C0,C1).
+
+% Gives answer A to question Q
+ask(Q,A) :-
+		question(Q,[],A,[],C),
+		prove_all(C).
+
+% Proves all elements of L against the database
+prove_all([]).
+prove_all([H|T]) :-
+		call(H),
+		prove_all(T).
+		
+isVideo(A) :- video_name(Id, A), video(Id).
+
+% Find videos of same topic
+sameTopic(X,Y) :-
+	video_name(IdX, X),
+	video_topic(IdX, Topic),
+	video_topic(IdY, Topic),
+	video_name(IdY, Y),
+	IdX \= IdY.
+	
+% try:
+% ?- ask([what,is,similar,to,'Logic for Programmers: Propositional Logic'],A).
+% A = '[Logic] Predicate Logic' ;
+% A = 'Lecture 23 | Logic 3: Bottom-up and Top-down Proof Procedures' ;
