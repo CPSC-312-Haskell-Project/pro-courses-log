@@ -1,3 +1,4 @@
+:- [recommender]. 
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_error)).
@@ -23,29 +24,28 @@ server(Port) :-
 
       page_content(Request) --> 
 {
-   % catch because http_parameters throws if a param is invalid
-      catch(
             http_parameters(Request,
                [   
                % default for a missing param
-               q(Q, [default('this is default query')])]),
-            _E, 
-            fail),
-   !   
+               q(Q, [getLink(L,Q)])])   
+},
+{ 
+   getLink(L,Q)
 },
    html(
          [   
          h1('Pro-Courses-Log!'),
          p('A course video recommender built entirely on Prolog!'),
-         ask_vid(Q,A,L),
-         p('The query is ~w'-Q),
-         p('The answer is ~w' -A),
-         p('The link to video is ~w', -L)
-         ]). 
+         p('The query is ~w' -Q),
+         p('The link to a video related to this topic is ~w', -L)
+         ]).
 
    page_content(_Request) --> 
    html(
          [   
          h1('Oops!'),
          p('Some parameter wasnt valid')
-         ]). 
+         ]).  
+
+
+

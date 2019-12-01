@@ -1,3 +1,9 @@
+:- use_module(library(http/thread_httpd)).
+:- use_module(library(http/http_dispatch)).
+:- use_module(library(http/http_error)).
+:- use_module(library(http/html_write)).
+:- use_module(library(http/http_parameters)).
+:- http_handler('/query', handle_query, []).
 :- use_module(library(http/http_open)).
 :- use_module(library(http/json)).
 :- use_module(library(http/json_convert)).
@@ -278,8 +284,40 @@ getCourseTopic(X,Y) :-
 getCourseMinLevel(X,Y) :-
     course_minlevel(Id, X),
     course_name(Id, Y).
+/*
+server(Port) :-
+   http_server(http_dispatch, [port(Port)]).
 
+   handle_query(Request) :-
+      reply_html_page(
+            title('Howdy'),
+            [\page_content(Request)]).
 
+      page_content(Request) --> 
+{
+            http_parameters(Request,
+               [   
+               % default for a missing param
+               q(Q, [getLink(L,Q)])])   
+},
+{ 
+   getLink(L,Q)
+},
+   html(
+         [   
+         h1('Pro-Courses-Log!'),
+         p('A course video recommender built entirely on Prolog!'),
+         p('The query is ~w' -Q),
+         p('The link to a video related to this topic is: ~w', -L)
+         ]).
+
+   page_content(_Request) --> 
+   html(
+         [   
+         h1('Oops!'),
+         p('Some parameter wasnt valid')
+         ]).  
+*/         
 %linkTo(X,Y) :-
    %setof((X,Y), B^(video_link(Id, X), video_name(Id, Y), \+X=Y), Set), member((X,Y), Set).
    %setof((X,Y), linkHelp(X,Y), Set), member((X,Y), Set).
