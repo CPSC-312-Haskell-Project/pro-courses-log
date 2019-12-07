@@ -165,6 +165,9 @@ reln([video, related, to, course| L],L,O1,O2,_,[relatedVideoToCourse(O1,O2)]).
 reln([videos, related, to, course| L],L,O1,O2,_,[relatedVideoToCourse(O1,O2)]).
 reln([course, related, to, video| L],L,O1,O2,_,[relatedCourseToVideo(O1,O2)]).
 reln([courses, related, to, video| L],L,O1,O2,_,[relatedCourseToVideo(O1,O2)]).
+reln([course, details, for| L],L,O1,O2,_,[getCourseDetails(O1,O2)]).
+reln([course, details, to| L],L,O1,O2,_,[getCourseDetails(O1,O2)]).
+reln([course, details, of| L],L,O1,O2,_,[getCourseDetails(O1,O2)]).
 reln([full, course, details, for| L],L,O1,O2,_,[getCourseDetails(O1,O2)]).
 reln([full, course, details, to| L],L,O1,O2,_,[getCourseDetails(O1,O2)]).
 reln([full, course, details, of| L],L,O1,O2,_,[getCourseDetails(O1,O2)]).
