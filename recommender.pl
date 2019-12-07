@@ -144,6 +144,17 @@ reln([subject, of| L],L,O1,O2,_,[getSubject(O1,O2)]).
 reln([subject, for| L],L,O1,O2,_,[getSubject(O1,O2)]).
 reln([topic, of| L],L,O1,O2,_,[getTopic(O1,O2)]).
 reln([topic, for| L],L,O1,O2,_,[getTopic(O1,O2)]).
+reln([details, for| L],L,O1,O2,_,[getDetails(O1,O2)]).
+reln([details, to| L],L,O1,O2,_,[getDetails(O1,O2)]).
+reln([details, of| L],L,O1,O2,_,[getDetails(O1,O2)]).
+reln([full, details, for| L],L,O1,O2,_,[getDetails(O1,O2)]).
+reln([full, details, to| L],L,O1,O2,_,[getDetails(O1,O2)]).
+reln([full, details, of| L],L,O1,O2,_,[getDetails(O1,O2)]).
+
+% Course Relations.
+reln([similar, course, topic, to| L],L,O1,O2,_,[sameCourseTopic(O1,O2)]).
+reln([similar, course, topic, as| L],L,O1,O2,_,[sameCourseTopic(O1,O2)]).
+reln([same, course, topic, as| L],L,O1,O2,_,[sameCourseTopic(O1,O2)]).
 reln([course, topic, of| L],L,O1,O2,_,[getCourseTopic(O1,O2)]).
 reln([course, topic, for| L],L,O1,O2,_,[getCourseTopic(O1,O2)]).
 reln([level, requirement, of| L],L,O1,O2,_,[getCourseMinLevel(O1,O2)]).
@@ -154,6 +165,11 @@ reln([video, related, to, course| L],L,O1,O2,_,[relatedVideoToCourse(O1,O2)]).
 reln([videos, related, to, course| L],L,O1,O2,_,[relatedVideoToCourse(O1,O2)]).
 reln([course, related, to, video| L],L,O1,O2,_,[relatedCourseToVideo(O1,O2)]).
 reln([courses, related, to, video| L],L,O1,O2,_,[relatedCourseToVideo(O1,O2)]).
+reln([full, course, details, for| L],L,O1,O2,_,[getCourseDetails(O1,O2)]).
+reln([full, course, details, to| L],L,O1,O2,_,[getCourseDetails(O1,O2)]).
+reln([full, course, details, of| L],L,O1,O2,_,[getCourseDetails(O1,O2)]).
+reln([in, same, faculty, as| L],L,O1,O2,_,[sameFaculty(O1,O2)]).
+reln([in, same, program, as| L],L,O1,O2,_,[sameFaculty(O1,O2)]).
 
 
 %reln([related, to| L],L,O1,O2,_,[relatedTo(O1,O2)]).
@@ -162,6 +178,14 @@ reln([courses, related, to, video| L],L,O1,O2,_,[relatedCourseToVideo(O1,O2)]).
 question([show | L0],L1,Entity,C0,C1) :-
 		noun_phrase(L0,L1,Entity,C0,C1).
 question([show | L0],L1,Entity,C0,C1) :-
+		mp(L0,L1,Entity,C0,C1).
+question([find | L0],L1,Entity,C0,C1) :-
+		noun_phrase(L0,L1,Entity,C0,C1).
+question([find | L0],L1,Entity,C0,C1) :-
+		mp(L0,L1,Entity,C0,C1).
+question([get | L0],L1,Entity,C0,C1) :-
+		noun_phrase(L0,L1,Entity,C0,C1).
+question([get | L0],L1,Entity,C0,C1) :-
 		mp(L0,L1,Entity,C0,C1).
 question([what,are | L0],L1,Entity,C0,C1) :-
 		noun_phrase(L0,L1,Entity,C0,C1).
@@ -194,7 +218,7 @@ isCourse(A) :- course_name(Courseid, A), course(Courseid).
 %isVideoCreator(A) :- video_creator(Id, A), video(Id).
 %isVideoLink(A) :- video_link(Id, A), video(Id).
 
-% Find videos of same topic
+% Find videos X with same topic as a video Y
 sameTopic(X,Y) :-
 	video_name(IdX, X),
 	video_topic(IdX, Topic),
@@ -202,7 +226,7 @@ sameTopic(X,Y) :-
 	video_name(IdY, Y),
 	IdX \= IdY.
 
-% Find videos of same subject
+% Find videos X with same subject as a video Y
 sameSubject(X,Y) :-
 	video_name(IdX, X),
 	video_subject(IdX, Subject),
@@ -210,7 +234,7 @@ sameSubject(X,Y) :-
 	video_name(IdY, Y),
 	IdX \= IdY.
 
-% Find videos by same creator
+% Find videos X with same creator as a video Y
 sameCreator(X,Y) :-
 	video_name(IdX, X),
 	video_creator(IdX, Creator),
@@ -218,7 +242,7 @@ sameCreator(X,Y) :-
 	video_name(IdY, Y),
 	IdX \= IdY.
 
-% Find next level of topic
+% Find next level of video X from a video Y with the same topic
 nextVideo(X,Y) :-
 	video_name(IdX, X),
 	video_topic(IdX, Topic),
@@ -229,7 +253,7 @@ nextVideo(X,Y) :-
 	IdX \= IdY,
 	LevelX is LevelY + 1.
 
-% Find previous level of topic
+% Find previous level of video X from a video Y with the same topic
 previousVideo(X,Y) :-
 	video_name(IdX, X),
 	video_topic(IdX, Topic),
@@ -240,28 +264,50 @@ previousVideo(X,Y) :-
 	IdX \= IdY,
 	LevelX is LevelY - 1.
 
-
+% Get creator X for a video Y
 getCreator(X,Y) :-
 	video_creator(IdX, X),
 	video_name(IdX, Y).
 
+% Get level X for a video Y
 getLevel(X,Y) :-
 	video_level(IdX, X),
 	video_name(IdX, Y).
 
+% Get subject X for a video Y
 getSubject(X,Y) :-
 	video_subject(IdX, X),
 	video_name(IdX, Y).
 
+% Get topic X for a video Y
 getTopic(X,Y) :-
 	video_topic(IdX, X),
 	video_name(IdX, Y).
 
+% Get link X for a video Y
 getLink(X,Y) :-
     video_link(Id, X),
     video_name(Id, Y).
 
+% Get all details X for a video Y
+getDetails(X,Y) :-
+    video_link(Id, X1),
+    video_subject(Id, X2),
+    video_topic(Id, X3),
+    video_level(Id, X4),
+    video_creator(Id, X5),
+    video_name(Id, Y),
+    string_concat("Link: ", X1, X1F),
+    string_concat(", Subject: ", X2, X2F),
+    string_concat(", Topic: ", X3, X3F),
+    string_concat(", Level: ", X4, X4F),
+    string_concat(", Creator: ", X5, X5F),
+    string_concat(X1F, X2F, X12F),
+    string_concat(X12F, X3F, X123F),
+    string_concat(X123F, X4F, X1234F),
+    string_concat(X1234F, X5F, X).
 
+% find related videos X to a course Y
 relatedVideoToCourse(X,Y) :-
 	video_name(IdX, X),
 	video_topic(IdX, Topic),
@@ -271,19 +317,50 @@ relatedVideoToCourse(X,Y) :-
 	course_minlevel(IdY, MinLevel),
 	MinLevel =< Level.
 
+% find related courses X to a video Y
 relatedCourseToVideo(X,Y) :-
 	course_name(IdX, X),
 	course_topic(IdX, Topic),
     video_topic(IdY, Topic),
     video_name(IdY, Y).
 
+% Get course topic X for a course Y
 getCourseTopic(X,Y) :-
 	course_topic(IdX, X),
 	course_name(IdX, Y).
 
+% Get min level X for a course Y
 getCourseMinLevel(X,Y) :-
     course_minlevel(Id, X),
     course_name(Id, Y).
+
+% Find courses X with same course topic as Y
+sameCourseTopic(X,Y) :-
+	course_name(IdX, X),
+	course_topic(IdX, Topic),
+	course_topic(IdY, Topic),
+	course_name(IdY, Y),
+	IdX \= IdY.
+
+% Find courses X in the same faculty as course Y
+sameFaculty(X,Y) :-
+	course_name(IdX, X),
+	course_name(IdY, Y),
+	sub_string(IdX, 0, 4, _, Faculty),
+	sub_string(IdY, 0, 4, _, Faculty),
+	IdX \= IdY.
+
+% Get all details X for a course Y
+getCourseDetails(X,Y) :-
+    course_topic(Id, X2),
+    course_minlevel(Id, X3),
+    course_name(Id, Y),
+    string_concat("Id: ", Id, X1F),
+    string_concat(", Course Topic: ", X2, X2F),
+    string_concat(", Min. Level: ", X3, X3F),
+    string_concat(X1F, X2F, X12F),
+    string_concat(X12F, X3F, X).
+
 /*
 server(Port) :-
    http_server(http_dispatch, [port(Port)]).
@@ -335,6 +412,10 @@ server(Port) :-
 % ?- ask([show,level,requirement,for,'Models of Computation'],A).
 % ?- ask([show,course,related,to,video,'Logic for Programmers: Propositional Logic'],A).
 % ?- ask([show,videos,related,to,course,'Models of Computation'],A).
+% ?- ask([what,are,courses,with,same,course,topic,as,'Introduction to Software Engineering'],A).
+% ?- ask([get,full,details,for,'Logic for Programmers: Propositional Logic'],A).
+% ?- ask([get,full,course,details,for,'Introduction to Software Engineering'],A).
+% ?- ask([find,course,in,same,faculty,as,'Introduction to Software Engineering'],A).
 
 % To get link as well as video title, try:
 % ?- ask_vid([show,next,video,from,'[Logic] Predicate Logic'],A,L).
