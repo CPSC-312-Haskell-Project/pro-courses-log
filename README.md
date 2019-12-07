@@ -17,3 +17,29 @@ Overall, Prolog clearly has potential for rule-based logical query data systems 
 
 In terms of future improvements, we would continue to build upon our queryable knowledgebase, expand the scope of our project to other subject areas and continue to support additional usability features such as wrapping our application in an expanded GUI.
 
+## Instructions
+
+Open recommender.pl in SWI-Prolog.
+
+% try:
+% ?- ask([show,videos,with,similar,topic,to,'Logic for Programmers: Propositional Logic'],A).
+% A = '[Logic] Predicate Logic' ;
+% A = 'Lecture 23 | Logic 3: Bottom-up and Top-down Proof Procedures' ;
+
+% ?- ask([show,video,with,same,subject,as,'Logic for Programmers: Propositional Logic'],A).
+% ?- ask([show,videos,with,same,creator,as,'UML Class Diagram Tutorial'],A).
+% ?- ask([show,next,video,from,'[Logic] Predicate Logic'],A).
+% ?- ask([show,previous,video,from,'[Logic] Predicate Logic'],A).
+% ?- ask([show,level,of,'Logic for Programmers: Propositional Logic'],A).
+% ?- ask([show,level,requirement,for,'Models of Computation'],A).
+% ?- ask([show,course,related,to,video,'Logic for Programmers: Propositional Logic'],A).
+% ?- ask([show,videos,related,to,course,'Models of Computation'],A).
+% ?- ask([what,are,courses,with,same,course,topic,as,'Introduction to Software Engineering'],A).
+% ?- ask([get,full,details,for,'Logic for Programmers: Propositional Logic'],A).
+% ?- ask([get,full,course,details,for,'Introduction to Software Engineering'],A).
+% ?- ask([find,course,in,same,faculty,as,'Introduction to Software Engineering'],A).
+
+% To get link as well as video title, try:
+% ?- ask_vid([show,next,video,from,'[Logic] Predicate Logic'],A,L).
+% ?- ask_vid([show,videos,related,to,course,'Introduction to Software Engineering'],A,L).
+
