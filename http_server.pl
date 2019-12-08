@@ -17,35 +17,36 @@ server(Port) :-
        http://www.swi-prolog.org/pldoc/doc_for?object=section%283,%273.9%27,swi%28%27/doc/packages/http.html%27%29%29
     */
 
-   handle_query(Request) :-
+handle_query(Request) :-
       reply_html_page(
-            title('Howdy'),
+            title('CoursesLog'),
             [\page_content(Request)]).
 
-      page_content(Request) --> 
-{
+page_content(Request) --> 
+      {
             http_parameters(Request,
                [   
                % default for a missing param
                q(Q, [getLink(L,Q)])])   
-},
-{ 
-   getLink(L,Q)
-},
-   html(
-         [   
-         h1('Pro-Courses-Log!'),
-         p('A course video recommender built entirely on Prolog!'),
-         p('The query is ~w' -Q),
-         p('The link to a video related to this topic is ~w', -L)
+      },
+      { 
+         getLink(L,Q)
+      },
+         html(
+               [   
+               h1('CoursesLog!'),
+               p('A course video recommender built entirely on Prolog!'),
+               p('The query is ~w' -Q),
+               p('The link to a video related to this topic is'),
+               a((href(L)),L)
          ]).
 
-   page_content(_Request) --> 
+page_content(_Request) --> 
    html(
-         [   
+   [   
          h1('Oops!'),
          p('Some parameter wasnt valid')
-         ]).  
+   ]).  
 
 
 

@@ -1,0 +1,5 @@
+localhost:8000/query?q=%5BLogic%5D%20Predicate%20Logic
+localhost:8000/query?q=UML%20Class%20Diagram%20Tutorial
+localhost:8000/query?q=Logic%20for%20Programmers%3A%20Propositional%20Logic
+localhost:8000/query?q=How%20to%20Make%20a%20UML%20Sequence%20Diagram
+localhost:8000/query?q=Learn%20Java%20in%20%31%34%20Minutes%20%28seriously%29

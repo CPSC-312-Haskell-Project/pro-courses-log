@@ -10,7 +10,7 @@
 :- dynamic(found/2).
 
 % load the database
-load_db(Dict) :- 
+load(Dict) :- 
 	setup_call_cleanup(
 		http_open('https://raw.githubusercontent.com/CPSC-312-Haskell-Project/pro-courses-log/master/database.json', In, []),
 		json_read_dict(In, Dict),
@@ -61,10 +61,6 @@ parse_courses([H|T],H) :-
 	assert(course_minlevel(Courseid, Minlevel)),
 	assert(course_topic(Courseid, Topic)),
 	parse_courses(T,_).
-
-% Build the knowledge base first whenever the project is made before allowing
-% users to make queries
-:- initialization(load_db(_)).
 
 % What to try:
 % ?- course_topic(cpsc312,A).
@@ -364,40 +360,7 @@ getCourseDetails(X,Y) :-
     string_concat(X1F, X2F, X12F),
     string_concat(X12F, X3F, X).
 
-/*
-server(Port) :-
-   http_server(http_dispatch, [port(Port)]).
 
-   handle_query(Request) :-
-      reply_html_page(
-            title('Howdy'),
-            [\page_content(Request)]).
-
-      page_content(Request) --> 
-{
-            http_parameters(Request,
-               [   
-               % default for a missing param
-               q(Q, [getLink(L,Q)])])   
-},
-{ 
-   getLink(L,Q)
-},
-   html(
-         [   
-         h1('Pro-Courses-Log!'),
-         p('A course video recommender built entirely on Prolog!'),
-         p('The query is ~w' -Q),
-         p('The link to a video related to this topic is: ~w', -L)
-         ]).
-
-   page_content(_Request) --> 
-   html(
-         [   
-         h1('Oops!'),
-         p('Some parameter wasnt valid')
-         ]).  
-*/         
 %linkTo(X,Y) :-
    %setof((X,Y), B^(video_link(Id, X), video_name(Id, Y), \+X=Y), Set), member((X,Y), Set).
    %setof((X,Y), linkHelp(X,Y), Set), member((X,Y), Set).
